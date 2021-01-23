@@ -1,10 +1,33 @@
+/* .darkMode {
+  background-color: #232323;
+  color: #efefef;
+} */
+
+.root {
+  background-color: #efefef;
+}
+
+.posts {
+  background-color: #efefef;
+}
+
+.titled {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 3% 10% 0 10%;
+}
+
 .container {
   min-height: 100vh;
-  padding: 10%;
+  background-color: #ffffff;
+  margin: 0 10%;
+  padding: 0 16px 0 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border-radius: 4px;
 }
 
 .fullWidth {
@@ -122,7 +145,8 @@
 }
 
 .logo {
-  height: 1em;
+  height: 3em;
+  margin-right: 8px;
 }
 
 @media (max-width: 600px) {
