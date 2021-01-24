@@ -2,9 +2,10 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import 'antd/dist/antd.css'
 import cacheData from "memory-cache";
+import { useRouter } from 'next/router';
 import { Statistic, Row, Col, Button, Divider, Pagination, Layout, Menu } from 'antd';
 import { UserOutlined, ClockCircleOutlined, LinkOutlined } from '@ant-design/icons';
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 
 function TableRow({item}) {
   return (
@@ -36,45 +37,57 @@ function TableRow({item}) {
   )
 }
 
+function Header() {
+  return (
+    <div style={{backgroundColor: '#FB651E'}}>
+      <div style={{backgroundColor: '#FB651E', margin: '0 10%', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%'}}>
+        <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
+        <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
+        <Divider type="vertical"/>
+        <span style={{fontWeight: 800}}>NEWS</span>
+        <Divider type="vertical"/>
+        <span key="2">SHOW HN</span>
+        <Divider type="vertical"/>
+        <span key="3">ASK HN</span>
+      </div>
+    </div>
+  )
+}
+
+function onPaginationChange(page, pageSize, router) {
+  
+  console.log('pagination changed: ', page, pageSize);
+  router.push(`/?page=${page}`);
+}
+
 export default function Home(props) {
+
+  const router = useRouter();
+  const { values, totalPosts } = props;
+
   return (
     <div className={styles.root}>
       <Head>
         <title>Hacker News</title>
         <link rel="icon" href="/logo.png" />
       </Head>
-      {/* <Header>
-        <div className="logo" />
-        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item>
-        </Menu>
-      </Header> */}
-      <div style={{backgroundColor: '#FB651E'}}>
-        <div style={{backgroundColor: '#FB651E', margin: '0 10%', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%'}}>
-          <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
-          <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
-          <Divider type="vertical"/>
-          <span style={{fontWeight: 800}}>NEWS</span>
-          <Divider type="vertical"/>
-          <span key="2">SHOW HN</span>
-          <Divider type="vertical"/>
-          <span key="3">ASK HN</span>
-        </div>
-      </div>
+
+      <Header />
+
       <div className={styles.titled}>
         <h1 style={{fontSize: '2rem', color: '#676767'}}>Top news for Today</h1>
-        <Pagination defaultCurrent={1} total={250} pageSize={10} />
+        <Pagination defaultCurrent={1} total={totalPosts} pageSize={10} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
+
       <div className={styles.container}>
         <Divider style={{marginTop: 0}}/>
         <div className={styles.fullWidth}>
-          {props.values.map(v => <TableRow item={v} />)}
+          {values.map(v => <TableRow item={v} />)}
         </div>
       </div>
+
       <div className={styles.pagination}>
-        <Pagination defaultCurrent={1} total={250} pageSize={10} />
+        <Pagination defaultCurrent={1} total={totalPosts} pageSize={10} />
       </div>
     </div>
     
@@ -95,7 +108,8 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-       values: returnedData
+       values: returnedData,
+       totalPosts: posts.length
     }, // will be passed to the page component as props
   }
 }
