@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import 'antd/dist/antd.css'
+import cacheData from "memory-cache";
 import { Statistic, Row, Col, Button, Divider, Pagination, Layout, Menu } from 'antd';
 import { UserOutlined, ClockCircleOutlined, LinkOutlined } from '@ant-design/icons';
 const { Header, Content, Footer } = Layout;
@@ -83,20 +84,51 @@ export default function Home(props) {
 export async function getServerSideProps(context) {
 
   const { pagesize=10, page=1 } = context.query;
-  const res = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty')
-  let posts = await res.json()
-  
-  const slicedPosts = posts.slice(Number(page)*10, (Number(page)+1)*10);
-  const articles = slicedPosts.map(post => fetch(`https://hacker-news.firebaseio.com/v0/item/${post}.json?print=pretty`))
-  const data = await Promise.all(articles);
 
-  const jsonArticles = data.map(post => post.json());
+  let posts = await fetchAllWithCache('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
+  
+  const slicedPosts = posts.slice(Number(page)*Number(pagesize), (Number(page)+1)*Number(pagesize));
+  const jsonArticles = slicedPosts.map(post => getPostsViaCache(`https://hacker-news.firebaseio.com/v0/item/${post}.json?print=pretty`));
+
+  savePostsToCache(slicedPosts, jsonArticles);
   const returnedData = await Promise.all(jsonArticles);
 
   return {
     props: {
        values: returnedData
     }, // will be passed to the page component as props
+  }
+}
+
+async function getPostsViaCache(url) {
+  const value = cacheData.get(url);
+  if (value) {
+    console.log('fetching post from cache');
+    return value;
+  } else {
+    console.log('fetching post from server');
+    return fetch(url).then(post => post.json());
+  }
+}
+
+function savePostsToCache(slicedPosts, jsonArticles) {
+  const minutesToCache = 10;
+  slicedPosts.forEach((post, index) => {
+    const cacheKey = `https://hacker-news.firebaseio.com/v0/item/${post}.json?print=pretty`;
+    cacheData.put(cacheKey, jsonArticles[index], minutesToCache * 1000 * 60);
+  })
+}
+
+async function fetchAllWithCache(url) {
+  const value = cacheData.get(url);
+  if (value) {
+    return value;
+  } else {
+    const minutesToCache = 10;
+    const res = await fetch(url);
+    const data = await res.json();
+    cacheData.put(url, data, minutesToCache * 1000 * 60);
+    return data;
   }
 }
 
