@@ -3,66 +3,21 @@ import styles from '../styles/Home.module.css'
 import 'antd/dist/antd.css'
 import cacheData from "memory-cache";
 import { useRouter } from 'next/router';
-import { Statistic, Row, Col, Button, Divider, Pagination, Layout, Menu } from 'antd';
-import { UserOutlined, ClockCircleOutlined, LinkOutlined } from '@ant-design/icons';
+import TableRow from './../components/TableRow';
+import Header from './../components/Header';
+import { Divider, Pagination, Layout } from 'antd';
+
 const { Content, Footer } = Layout;
 
-function TableRow({item}) {
-  return (
-    <Row gutter={16} className={styles.fullWidth}>
-      <Col span={3}>
-        <Statistic title="POINTS" value={item.score} valueStyle={{ color: '#FB651E' }} />
-      </Col>
-      <Col span={3}>
-        <Statistic title="COMMENTS" value={item.descendants} valueStyle={{ color: '#FB651E' }} />
-      </Col>
-      <Col span={16} className={styles.separator}>
-        <h2>{item.title}</h2>
-        <ClockCircleOutlined />{` 15 mins ago `}
-        <Divider type="vertical"/>
-        <UserOutlined /> {item.by}
-        <Divider type="vertical"/>
-        <LinkOutlined /> {` google.com `}
-      </Col>
-      <Col span={1}>
-        <a
-            href={item.url}
-            target="_blank"
-          >
-          <Button type="primary" danger>Open</Button>
-        </a>
-      </Col>
-      <Divider />
-    </Row>
-  )
-}
-
-function Header() {
-  return (
-    <div style={{backgroundColor: '#FB651E'}}>
-      <div style={{backgroundColor: '#FB651E', margin: '0 10%', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%'}}>
-        <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
-        <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
-        <Divider type="vertical"/>
-        <span style={{fontWeight: 800}}>NEWS</span>
-        <Divider type="vertical"/>
-        <span key="2">SHOW HN</span>
-        <Divider type="vertical"/>
-        <span key="3">ASK HN</span>
-      </div>
-    </div>
-  )
-}
-
 function onPaginationChange(page, pageSize, router) {
-  
-  console.log('pagination changed: ', page, pageSize);
-  router.push(`/?page=${page}`);
+  router.push(`/?page=${page}&pagesize=${pageSize}`);
 }
 
 export default function Home(props) {
 
   const router = useRouter();
+  const { query } = router;
+  const {page = 1, pagesize = 10} = query;
   const { values, totalPosts } = props;
 
   return (
@@ -76,7 +31,7 @@ export default function Home(props) {
 
       <div className={styles.titled}>
         <h1 style={{fontSize: '2rem', color: '#676767'}}>Top news for Today</h1>
-        <Pagination defaultCurrent={1} total={totalPosts} pageSize={10} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
+        <Pagination defaultCurrent={page} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
 
       <div className={styles.container}>
@@ -87,7 +42,7 @@ export default function Home(props) {
       </div>
 
       <div className={styles.pagination}>
-        <Pagination defaultCurrent={1} total={totalPosts} pageSize={10} />
+        <Pagination defaultCurrent={page} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
     </div>
     
@@ -97,7 +52,6 @@ export default function Home(props) {
 export async function getServerSideProps(context) {
 
   const { pagesize=10, page=1 } = context.query;
-
   let posts = await fetchAllWithCache('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
   
   const slicedPosts = posts.slice(Number(page)*Number(pagesize), (Number(page)+1)*Number(pagesize));
