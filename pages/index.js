@@ -40,7 +40,7 @@ export default function Home(props) {
     <div className={styles.root}>
       <Head>
         <title>Hacker News</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" />
       </Head>
       {/* <Header>
         <div className="logo" />
@@ -51,26 +51,30 @@ export default function Home(props) {
         </Menu>
       </Header> */}
       <div style={{backgroundColor: '#FB651E'}}>
-        <div style={{backgroundColor: '#FB651E', margin: '0 10%', border: 'none', color: 'white', display: 'flex', alignItems: 'center'}}>
+        <div style={{backgroundColor: '#FB651E', margin: '0 10%', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%'}}>
           <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
           <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
-          <span key="1">NEWS</span>
+          <Divider type="vertical"/>
+          <span style={{fontWeight: 800}}>NEWS</span>
+          <Divider type="vertical"/>
           <span key="2">SHOW HN</span>
+          <Divider type="vertical"/>
           <span key="3">ASK HN</span>
         </div>
       </div>
       <div className={styles.titled}>
         <h1 style={{fontSize: '2rem', color: '#676767'}}>Top news for Today</h1>
-        <Pagination defaultCurrent={1} total={50} />
+        <Pagination defaultCurrent={1} total={250} pageSize={10} />
       </div>
       <div className={styles.container}>
         <Divider style={{marginTop: 0}}/>
         <div className={styles.fullWidth}>
           {props.values.map(v => <TableRow item={v} />)}
         </div>
-        <Pagination defaultCurrent={1} total={50} />
       </div>
-      
+      <div className={styles.pagination}>
+        <Pagination defaultCurrent={1} total={250} pageSize={10} />
+      </div>
     </div>
     
   )
@@ -78,7 +82,7 @@ export default function Home(props) {
 
 export async function getServerSideProps(context) {
 
-  const { content='latest', page=1 } = context.query;
+  const { pagesize=10, page=1 } = context.query;
   const res = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty')
   let posts = await res.json()
   
