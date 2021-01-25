@@ -3,23 +3,31 @@ import { Statistic, Row, Col, Button, Divider, Pagination, Layout, Menu } from '
 import { UserOutlined, ClockCircleOutlined, LinkOutlined } from '@ant-design/icons';
 import { getElapsedTime } from './utils';
 
+function Stats({title, value}) {
+  return (
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '8px'}} className={styles.stats}>
+      <p style={{ margin: 0 }}>{title}</p>
+      <p style={{ color: '#FB651E', fontSize: '1.5em', margin: '8px 0 0 0' }}>{value}</p>
+    </div>
+  )
+}
 export default function TableRow({item}) {
-  const { hostname } = new URL(item.url);
+  const { hostname } = new URL(item.url || 'https://news.ycombinator.com');
   return (
     <Row gutter={16} className={styles.fullWidth}>
       <Col span={3}>
-        <Statistic title="POINTS" value={item.score} valueStyle={{ color: '#FB651E' }} />
+        <Stats title="POINTS" value={item.score}  />
       </Col>
       <Col span={3}>
-        <Statistic title="COMMENTS" value={item.descendants} valueStyle={{ color: '#FB651E' }} />
+        <Stats title="COMMENTS" value={item.descendants}  />
       </Col>
       <Col span={16} className={styles.separator}>
-        <h2>{item.title}</h2>
-        <ClockCircleOutlined style={{marginRight: 4}}/>{getElapsedTime(item.time)}
+        <h2 className={styles.mainText}>{item.title}</h2>
+        <ClockCircleOutlined style={{marginRight: 4, color: '#898989'}}/><span style={{color: '#898989'}}>{getElapsedTime(item.time)}</span>
         <Divider type="vertical"/>
-        <UserOutlined style={{marginRight: 4}} /> {item.by}
+        <UserOutlined style={{marginRight: 4, color: '#898989'}} /> <span style={{color: '#898989'}}>{item.by}</span>
         <Divider type="vertical"/>
-        <LinkOutlined style={{marginRight: 4}} /> {hostname}
+        <LinkOutlined style={{marginRight: 4, color: '#898989'}} /> <span style={{color: '#898989'}}>{hostname}</span>
       </Col>
       <Col span={1}>
         <a

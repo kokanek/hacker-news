@@ -14,3 +14,23 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.ant-pagination-item-active a {
+  background-color: var(--color-background-muted) !important;
+  color:  var(--color-text-secondary) !important;
+}
+
+.ant-pagination-item a {
+  background-color: var(--color-background-muted) !important;
+  color:  var(--color-text-secondary) !important;
+}
+
+.ant-pagination-prev button, .ant-pagination-next button {
+  background-color: var(--color-background-muted) !important;
+  color:  var(--color-text-secondary) !important;
+}
+
+.ant-pagination {
+  background-color: var(--color-background-muted) !important;
+  color:  var(--color-text-secondary) !important;
+}

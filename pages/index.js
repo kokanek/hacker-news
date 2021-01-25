@@ -21,7 +21,7 @@ export default function Home(props) {
   const { values, totalPosts } = props;
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} id="root">
       <Head>
         <title>Hacker News</title>
         <link rel="icon" href="/logo.png" />
@@ -29,8 +29,8 @@ export default function Home(props) {
 
       <Header />
 
-      <div className={styles.titled}>
-        <h1 style={{fontSize: '2rem', color: '#676767'}}>Top news for Today</h1>
+      <div className={styles.topRow}>
+        <h1 className={styles.titleText}>Top news for Today</h1>
         <Pagination defaultCurrent={page} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
 
