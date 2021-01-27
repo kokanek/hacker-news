@@ -31,6 +31,11 @@ a {
 }
 
 .ant-pagination {
+  background-color: var(--color-background) !important;
+  color:  var(--color-text-secondary) !important;
+}
+
+.ant-select .ant-select-selector {
   background-color: var(--color-background-muted) !important;
   color:  var(--color-text-secondary) !important;
 }
