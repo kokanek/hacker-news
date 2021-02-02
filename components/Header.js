@@ -42,7 +42,7 @@ function getInitialColorMode() {
 }
 
 function routeToUrl(e, router) {
-  console.log('page', e.target.innerHTML);
+  console.log('page', e.target.innerHTML, e.target, e.currentTarget);
   switch(e.target.innerHTML) {
     case 'NEWS': 
       router.push(`/news`);
@@ -60,8 +60,9 @@ function routeToUrl(e, router) {
   //
 }
 
-export default function Header() {
+export default function Header({path}) {
 
+  console.log('path in header: ', path);
   const [darkModeEnabled, setDarkMode] = useState(false);
   const router = useRouter();
 
@@ -82,13 +83,13 @@ export default function Header() {
         <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
         <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
         <Divider type="vertical"/>
-        <span style={{fontWeight: 800}} onClick={(item) => routeToUrl(item, router)}>NEWS</span>
+        <span key="news" className={path === 'news' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>NEWS</span>
         <Divider type="vertical"/>
-        <span key="2" onClick={(item) => routeToUrl(item, router)}>SHOW HN</span>
+        <span key="show" className={path === 'show' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>SHOW HN</span>
         <Divider type="vertical"/>
-        <span key="3" onClick={(item) => routeToUrl(item, router)}>ASK HN</span>
+        <span key="ask" className={path === 'ask' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>ASK HN</span>
         <Divider type="vertical"/>
-        <span key="4" onClick={(item) => routeToUrl(item, router)}>JOBS</span>
+        <span key="jobs" className={path === 'jobs' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>JOBS</span>
       </div>
       <div style={{display: 'flex', color: 'white', alignItems: 'center', margin: '0 10% 0 0'}}>
         <span style={{marginRight: '8px'}}>Dark Mode 🌗</span>

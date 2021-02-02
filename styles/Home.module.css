@@ -25,6 +25,10 @@
   color: var(--color-text-title);
 }
 
+.bold {
+  font-weight: 800;
+}
+
 .pagination {
   display: flex;
   align-items: baseline;

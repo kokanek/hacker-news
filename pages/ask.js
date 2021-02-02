@@ -16,7 +16,9 @@ function onPaginationChange(page, pageSize, router) {
 export default function Home(props) {
 
   const router = useRouter();
-  const { query } = router;
+  const { query, pathname } = router;
+  const path = pathname.split('/')[1] || 'news';
+  console.log('path: ', path);
   const {page = 1, pagesize = 10} = query;
   const { values, totalPosts } = props;
 
@@ -27,10 +29,10 @@ export default function Home(props) {
         <link rel="icon" href="/logo.png" />
       </Head>
 
-      <Header />
+      <Header path={path} />
 
       <div className={styles.topRow}>
-        <h1 className={styles.titleText}>Top news for Today</h1>
+        <h1 className={styles.titleText}>Ask HN</h1>
         <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
 
