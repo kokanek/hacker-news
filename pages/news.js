@@ -5,11 +5,12 @@ import cacheData from "memory-cache";
 import { useRouter } from 'next/router';
 import TableRow from './../components/TableRow';
 import Header from './../components/Header';
-import { Divider, Pagination, Layout } from 'antd';
+import { Divider, Pagination } from 'antd';
 
 const API_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty';
 
 function onPaginationChange(page, pageSize, router) {
+  console.log('page, size: ', page, pageSize);
   router.push(`/news?page=${page}&pagesize=${pageSize}`);
 }
 
@@ -18,6 +19,7 @@ export default function Home(props) {
   const router = useRouter();
   const { query } = router;
   const {page = 1, pagesize = 10} = query;
+  console.log('page, size: ', page, pagesize);
   const { values, totalPosts } = props;
 
   return (
@@ -31,7 +33,7 @@ export default function Home(props) {
 
       <div className={styles.topRow}>
         <h1 className={styles.titleText}>Top news for Today</h1>
-        <Pagination current={page} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
+        <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
 
       <div className={styles.container}>
@@ -42,7 +44,7 @@ export default function Home(props) {
       </div>
 
       <div className={styles.pagination}>
-        <Pagination current={page} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
+        <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
       <div className={styles.footer}>{`Created with ❤️ by @`}
       <a

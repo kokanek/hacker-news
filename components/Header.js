@@ -1,6 +1,6 @@
 import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
-import { ThunderboltFilled, ThunderboltOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
 import { Divider, Switch } from 'antd';
 
 function onToggleDarkMode(checked, setDarkMode) {
@@ -41,9 +41,29 @@ function getInitialColorMode() {
   return false;
 }
 
+function routeToUrl(e, router) {
+  console.log('page', e.target.innerHTML);
+  switch(e.target.innerHTML) {
+    case 'NEWS': 
+      router.push(`/news`);
+      break;
+    case 'SHOW HN': 
+      router.push(`/show`);
+      break;
+    case 'ASK HN': 
+      router.push(`/ask`);
+      break;
+    case 'JOBS': 
+      router.push(`/jobs`);
+      break;
+  }
+  //
+}
+
 export default function Header() {
 
   const [darkModeEnabled, setDarkMode] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
@@ -62,13 +82,13 @@ export default function Header() {
         <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
         <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
         <Divider type="vertical"/>
-        <span style={{fontWeight: 800}}>NEWS</span>
+        <span style={{fontWeight: 800}} onClick={(item) => routeToUrl(item, router)}>NEWS</span>
         <Divider type="vertical"/>
-        <span key="2">SHOW HN</span>
+        <span key="2" onClick={(item) => routeToUrl(item, router)}>SHOW HN</span>
         <Divider type="vertical"/>
-        <span key="3">ASK HN</span>
+        <span key="3" onClick={(item) => routeToUrl(item, router)}>ASK HN</span>
         <Divider type="vertical"/>
-        <span key="4">JOBS</span>
+        <span key="4" onClick={(item) => routeToUrl(item, router)}>JOBS</span>
       </div>
       <div style={{display: 'flex', color: 'white', alignItems: 'center', margin: '0 10% 0 0'}}>
         <span style={{marginRight: '8px'}}>Dark Mode 🌗</span>
