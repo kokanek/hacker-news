@@ -20,6 +20,11 @@
   margin: 3% 10% 0 10%;
 }
 
+.row {  
+  display: flex;
+  align-items: baseline;
+}
+
 .titleText {
   font-size: 2rem;
   color: var(--color-text-title);

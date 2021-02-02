@@ -1,10 +1,9 @@
 import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Divider, Switch } from 'antd';
+import { Divider, Switch, Spin } from 'antd';
 
 function onToggleDarkMode(checked, setDarkMode) {
-
   const root = document.getElementById('root');
   root.style.setProperty('--color-background', checked ? '#0E141C' : '#efefef');
   root.style.setProperty('--color-background-muted', checked ? '#152028' : '#ffffff');
@@ -56,6 +55,12 @@ function routeToUrl(e, router) {
     case 'JOBS': 
       router.push(`/jobs`);
       break;
+    case 'HACKERNEWS':
+      router.push('/news')
+      break;
+    default:
+      router.push(`/news`);
+      break;
   }
   //
 }
@@ -80,16 +85,16 @@ export default function Header({path}) {
   return (
     <div style={{backgroundColor: '#FB651E', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
       <div style={{backgroundColor: '#FB651E', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%', margin: '0 10% 0 10%'}}>
-        <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} />
-        <span style={{fontSize: '1.5em', marginRight: '16px'}}>HACKERNEWS</span>
+        <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}/>
+        <span style={{fontSize: '1.5em', marginRight: '16px'}} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>HACKERNEWS</span>
         <Divider type="vertical"/>
-        <span key="news" className={path === 'news' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>NEWS</span>
+        <span key="news" className={path === 'news' ? styles.bold : ''} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>NEWS</span>
         <Divider type="vertical"/>
-        <span key="show" className={path === 'show' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>SHOW HN</span>
+        <span key="show" className={path === 'show' ? styles.bold : ''} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>SHOW HN</span>
         <Divider type="vertical"/>
-        <span key="ask" className={path === 'ask' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>ASK HN</span>
+        <span key="ask" className={path === 'ask' ? styles.bold : ''} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>ASK HN</span>
         <Divider type="vertical"/>
-        <span key="jobs" className={path === 'jobs' ? styles.bold : ''} onClick={(item) => routeToUrl(item, router)}>JOBS</span>
+        <span key="jobs" className={path === 'jobs' ? styles.bold : ''} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>JOBS</span>
       </div>
       <div style={{display: 'flex', color: 'white', alignItems: 'center', margin: '0 10% 0 0'}}>
         <span style={{marginRight: '8px'}}>Dark Mode 🌗</span>
