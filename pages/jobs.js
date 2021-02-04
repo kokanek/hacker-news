@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import 'antd/dist/antd.css'
 import cacheData from "memory-cache";
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import TableRow from './../components/TableRow';
 import Header from './../components/Header';
-import { Divider, Pagination, Layout } from 'antd';
+import { Divider, Pagination, Spin } from 'antd';
 
 const API_URL = 'https://hacker-news.firebaseio.com/v0/jobstories.json?print=pretty';
 
@@ -15,12 +16,18 @@ function onPaginationChange(page, pageSize, router) {
 
 export default function Home(props) {
 
+  const [isLoading, setLoading] = useState(false);
+  Router.events.on('routeChangeStart', () => {setLoading(true)}); 
+  Router.events.on('routeChangeComplete', () => {setLoading(false)}); 
+  Router.events.on('routeChangeError', () => {setLoading(false)});
+
   const router = useRouter();
   const { query, pathname } = router;
   const path = pathname.split('/')[1] || 'news';
   console.log('path: ', path);
   const {page = 1, pagesize = 10} = query;
   const { values, totalPosts } = props;
+  console.log('props values: ', values);
 
   return (
     <div className={styles.root} id="root">
@@ -32,14 +39,14 @@ export default function Home(props) {
       <Header path={path} />
 
       <div className={styles.topRow}>
-        <h1 className={styles.titleText}>Jobs</h1>
+        <div className={styles.row}><h1 className={styles.titleText}>Jobs</h1>{isLoading && <Spin size="large" style={{marginLeft: 16}}/>}</div>
         <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
 
       <div className={styles.container}>
         <Divider style={{marginTop: 0}}/>
         <div className={styles.fullWidth}>
-          {values.map(v => <TableRow item={v} key={v.id}/>)}
+          {values.map(v => <TableRow item={v} key={v && v.id} jobs={true}/>)}
         </div>
       </div>
 
@@ -62,6 +69,22 @@ export default function Home(props) {
   )
 }
 
+function parseJobs(jobs) {
+  jobs.forEach(job => {
+    job.code = 'N/A';
+    job.org = 'N/A'
+    const title = job.title;
+    if(title.includes("(YC")) {
+      const idx = title.indexOf('(YC');
+      const end = title.indexOf(')');
+      job.code = title.slice(idx+1, end);
+      job.org = title.slice(0, idx).trim();
+    }
+  });
+  
+  return jobs;
+}
+
 export async function getServerSideProps(context) {
 
   let { pagesize=10, page=1 } = context.query;
@@ -74,9 +97,11 @@ export async function getServerSideProps(context) {
   savePostsToCache(slicedPosts, jsonArticles);
   const returnedData = await Promise.all(jsonArticles);
 
+  const jobs = parseJobs(returnedData);
+
   return {
     props: {
-       values: returnedData,
+       values: jobs,
        totalPosts: posts.length
     }, // will be passed to the page component as props
   }

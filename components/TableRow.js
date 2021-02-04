@@ -11,16 +11,22 @@ function Stats({title, value}) {
     </div>
   )
 }
-export default function TableRow({item}) {
+export default function TableRow({item, jobs}) {
   const { hostname } = new URL(item.url || 'https://news.ycombinator.com');
   return (
     <Row gutter={16} className={styles.fullWidth}>
-      <Col span={3}>
+      {jobs && <Col span={3}>
+        <Stats title="CODE" value={item.code}  />
+      </Col>}
+      {jobs && <Col span={3}>
+        <Stats title="COMPANY" value={item.org}  />
+      </Col>}
+      {!jobs && <Col span={3}>
         <Stats title="POINTS" value={item.score}  />
-      </Col>
-      <Col span={3}>
+      </Col>}
+      {!jobs && <Col span={3}>
         <Stats title="COMMENTS" value={item.descendants}  />
-      </Col>
+      </Col>}
       <Col span={16} className={styles.separator}>
         <h2 className={styles.mainText}>{item.title}</h2>
         <ClockCircleOutlined style={{marginRight: 4, color: '#898989'}}/><span style={{color: '#898989'}}>{getElapsedTime(item.time)}</span>

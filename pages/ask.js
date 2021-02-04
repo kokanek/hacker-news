@@ -3,10 +3,10 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import 'antd/dist/antd.css'
 import cacheData from "memory-cache";
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import TableRow from './../components/TableRow';
 import Header from './../components/Header';
-import { Divider, Pagination, Layout } from 'antd';
+import { Divider, Pagination, Spin } from 'antd';
 
 const API_URL = 'https://hacker-news.firebaseio.com/v0/askstories.json?print=pretty';
 
@@ -15,6 +15,11 @@ function onPaginationChange(page, pageSize, router) {
 }
 
 export default function Home(props) {
+
+  const [isLoading, setLoading] = useState(false);
+  Router.events.on('routeChangeStart', () => {setLoading(true)}); 
+  Router.events.on('routeChangeComplete', () => {setLoading(false)}); 
+  Router.events.on('routeChangeError', () => {setLoading(false)});
 
   const router = useRouter();
   const { query, pathname } = router;
@@ -33,7 +38,7 @@ export default function Home(props) {
       <Header path={path} />
 
       <div className={styles.topRow}>
-        <h1 className={styles.titleText}>Ask HN</h1>
+        <div className={styles.row}><h1 className={styles.titleText}>Ask HN</h1>{isLoading && <Spin size="large" style={{marginLeft: 16}}/>}</div>
         <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
 
