@@ -84,9 +84,9 @@ export default function Header({path}) {
 
   return (
     <div style={{backgroundColor: '#FB651E', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-      <div style={{backgroundColor: '#FB651E', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%', margin: '0 10% 0 10%'}}>
-        <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}/>
-        <span style={{fontSize: '1.5em', marginRight: '16px'}} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>HACKERNEWS</span>
+      <div style={{backgroundColor: '#FB651E', border: 'none', color: 'white', display: 'flex', alignItems: 'center', height: '100%', margin: '0 10% 0 10%', padding: '4px'}}>
+        <img src="/logo.png" alt="Ycombinator Logo" className={styles.logo} style={{cursor: 'pointer', border: '2px solid white'}} onClick={(item) => routeToUrl(item, router)}/>
+        <span style={{cursor: 'pointer', marginRight: '16px', fontSize: '1.2rem'}} onClick={(item) => routeToUrl(item, router)}>HACKERNEWS</span>
         <Divider type="vertical"/>
         <span key="news" className={path === 'news' ? styles.bold : ''} style={{cursor: 'pointer'}} onClick={(item) => routeToUrl(item, router)}>NEWS</span>
         <Divider type="vertical"/>

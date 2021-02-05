@@ -77,7 +77,7 @@ function parseJobs(jobs) {
     if(title.includes("(YC")) {
       const idx = title.indexOf('(YC');
       const end = title.indexOf(')');
-      job.code = title.slice(idx+1, end);
+      job.code = title.slice(idx+4, end);
       job.org = title.slice(0, idx).trim();
     }
   });

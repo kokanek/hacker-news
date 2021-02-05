@@ -16,16 +16,16 @@ export default function TableRow({item, jobs}) {
   return (
     <Row gutter={16} className={styles.fullWidth}>
       {jobs && <Col span={3}>
-        <Stats title="CODE" value={item.code}  />
+        <Stats title="COMPANY" value={item.org}  />
       </Col>}
       {jobs && <Col span={3}>
-        <Stats title="COMPANY" value={item.org}  />
+        <Stats title="YC CODE" value={item.code}  />
       </Col>}
       {!jobs && <Col span={3}>
         <Stats title="POINTS" value={item.score}  />
       </Col>}
       {!jobs && <Col span={3}>
-        <Stats title="COMMENTS" value={item.descendants}  />
+        <Stats title="COMMENTS" value={item.descendants || 'N/A'}  />
       </Col>}
       <Col span={16} className={styles.separator}>
         <h2 className={styles.mainText}>{item.title}</h2>
@@ -40,7 +40,7 @@ export default function TableRow({item, jobs}) {
             href={item.url}
             target="_blank"
           >
-          <Button type="primary" danger>Open</Button>
+          <Button type="primary" danger style={{marginTop: '8px'}}>Open</Button>
         </a>
       </Col>
       <Divider />
