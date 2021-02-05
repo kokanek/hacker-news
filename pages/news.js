@@ -6,6 +6,7 @@ import cacheData from "memory-cache";
 import Router, { useRouter } from 'next/router';
 import TableRow from './../components/TableRow';
 import Header from './../components/Header';
+import Footer from './../components/Footer';
 import { Divider, Pagination, Spin } from 'antd';
 
 const API_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty';
@@ -53,17 +54,8 @@ export default function Home(props) {
       <div className={styles.pagination}>
         <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
-      <div className={styles.footer}>{`Created with ❤️ by @`}
-      <a
-        href="https://comscience.now.sh"
-        target="_blank"
-      > kokaneka</a>. Powered by @ <a
-        href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {`Vercel`}
-      </a>.</div>
+      
+      <Footer />
     </div>
     
   )
