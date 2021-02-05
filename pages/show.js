@@ -100,7 +100,7 @@ async function getPostsViaCache(url) {
 }
 
 function savePostsToCache(slicedPosts, jsonArticles) {
-  const minutesToCache = 10;
+  const minutesToCache = 5;
   slicedPosts.forEach((post, index) => {
     const cacheKey = `https://hacker-news.firebaseio.com/v0/item/${post}.json?print=pretty`;
     cacheData.put(cacheKey, jsonArticles[index], minutesToCache * 1000 * 60);
@@ -112,7 +112,7 @@ async function fetchAllWithCache(url) {
   if (value) {
     return value;
   } else {
-    const minutesToCache = 10;
+    const minutesToCache = 5;
     const res = await fetch(url);
     const data = await res.json();
     cacheData.put(url, data, minutesToCache * 1000 * 60);
