@@ -45,13 +45,14 @@ export default function Home(props) {
       <div className={styles.container}>
         <Divider style={{marginTop: 0}}/>
         <div className={styles.fullWidth}>
-          {values.map(v => <TableRow item={v} key={v.id}/>)}
+          {values.map(v => <TableRow item={v} key={v.id} navigateToDetailed={true}/>)}
         </div>
       </div>
 
       <div className={styles.pagination}>
         <Pagination current={Number(page)} total={totalPosts} pageSize={pagesize} onChange={(page, pageSize) => onPaginationChange(page, pageSize, router)}/>
       </div>
+      
       <div className={styles.footer}>{`Created with ❤️ by @`}
       <a
         href="https://comscience.now.sh"

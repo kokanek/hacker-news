@@ -41,6 +41,17 @@
   margin: 1% 10% 0 10%;
 }
 
+.itemContainer {
+  background-color: var(--color-background-muted);
+  margin: 0 10%;
+  padding: 0 16px 0 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 4px;
+}
+
 .container {
   min-height: 100vh;
   background-color: var(--color-background-muted);

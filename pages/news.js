@@ -47,7 +47,7 @@ export default function Home(props) {
       <div className={styles.container}>
         <Divider style={{marginTop: 0}}/>
         <div className={styles.fullWidth}>
-          {values.map(v => <TableRow item={v} key={v.id}/>)}
+          {values.map(v => <TableRow item={v} key={v.id} navigateToDetailed={true}/>)}
         </div>
       </div>
 

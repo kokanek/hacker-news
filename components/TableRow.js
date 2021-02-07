@@ -11,7 +11,7 @@ function Stats({title, value}) {
     </div>
   )
 }
-export default function TableRow({item, jobs}) {
+export default function TableRow({item, jobs, navigateToDetailed}) {
   const { hostname } = new URL(item.url || 'https://news.ycombinator.com');
   return (
     <Row gutter={16} className={styles.fullWidth}>
@@ -28,7 +28,7 @@ export default function TableRow({item, jobs}) {
         <Stats title="COMMENTS" value={item.descendants || 'N/A'}  />
       </Col>}
       <Col span={16} className={styles.separator}>
-        <h2 className={styles.mainText}>{item.title}</h2>
+        <h2 className={styles.mainText}><a href={navigateToDetailed ? `item/${item.id}` : null} target="_blank" style={{textDecoration: 'inherit', color: 'inherit'}}>{item.title}</a></h2>
         <ClockCircleOutlined style={{marginRight: 4, color: '#898989'}}/><span style={{color: '#898989'}}>{getElapsedTime(item.time)}</span>
         <Divider type="vertical"/>
         <UserOutlined style={{marginRight: 4, color: '#898989'}} /> <span style={{color: '#898989'}}>{item.by}</span>
