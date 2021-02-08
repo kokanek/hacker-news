@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactHtmlParser from 'react-html-parser';
 import Head from 'next/head'
 import cheerio from 'cheerio';
 import axios from 'axios';
@@ -9,15 +10,8 @@ import cacheData from "memory-cache";
 import Router, { useRouter } from 'next/router';
 import Header from './../../components/Header';
 import Footer from './../../components/Footer';
-import { Divider, Pagination, Spin, List, Avatar, Space } from 'antd';
-import { MessageOutlined, StarOutlined, MehOutlined } from '@ant-design/icons';
-
-const API_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty';
-
-function onPaginationChange(page, pageSize, router) {
-  console.log('page, size: ', page, pageSize);
-  router.push(`/news?page=${page}&pagesize=${pageSize}`);
-}
+import { Comment, Pagination, Spin, List, Avatar, Space } from 'antd';
+import { MessageOutlined, StarOutlined, MehOutlined, ConsoleSqlOutlined } from '@ant-design/icons';
 
 const IconText = ({ icon, text }) => (
   <Space>
@@ -26,20 +20,45 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 
+async function fetchComments(commentIds) {
+  const jsonComments = commentIds.map(comment => getPostsViaCache(`https://hacker-news.firebaseio.com/v0/item/${comment}.json?print=pretty`));
+  let result = await Promise.all(jsonComments);
+
+  console.log('results: ', result);
+  result = result.filter(item => item.text && item.by);
+  result = result.map(item => ({
+    actions: [<span key="comment-list-reply-to-0">Reply to</span>],
+    author: item.by,
+    avatar: item.by && item.by[0].toUpperCase() || 'A',
+    content: item.text
+  }));
+
+  console.log('final results: ', result);
+  return result;
+}
+
 export default function Item(props) {
 
   const { post, image, summary } = props;
   console.log('post: ', post, image, summary);
-  const [isLoading, setLoading] = useState(false);
+  const [comments, setComments] = useState([]);
   const router = useRouter();
   const { query } = router;
   const { pid } = query;
+
+  useEffect(async () => {
+    const fetchedComments = await fetchComments(post.kids);
+    console.log('fetched comments in useEffect: ', fetchedComments);
+    setComments([...fetchedComments]);
+  }, []);
+
+  console.log('comments in render function: ', comments);
 
   const listData = [{
     href: post.url,
     title: post.title,
     by: post.by,
-    image: image || "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+    image: image || "/not_found.png",
     content: summary || post.title,
     comments: post.descendants,
     score: post.score,
@@ -55,7 +74,7 @@ export default function Item(props) {
       <Header />
 
       <div className={styles.topRow}>
-        <div className={styles.row}><h1 className={styles.titleText}>{post.type === 'news' ? 'News Post:' : 'Show HN Post:'}</h1></div>
+        <div className={styles.row}><h1 className={styles.titleText}>Post:</h1></div>
       </div>
 
       <div className={styles.itemContainer }>
@@ -90,6 +109,23 @@ export default function Item(props) {
         />
       </div>
 
+      <div className={styles.topRow}>
+        <div className={styles.row}><h4 className={styles.titleText}>Comments:</h4></div>
+      </div>
+
+      <div className={styles.itemContainer }>
+        {comments.map(comment => 
+          (
+            <Comment
+              actions={[<span key="comment-nested-reply-to">view replies</span>]}
+              author={comment.author}
+              avatar={ <Avatar>{comment.author[0]}</Avatar>}
+              content={<p className={styles.stats}>{ReactHtmlParser(comment.content)}</p>}
+            >
+            </Comment>
+          )
+        )}
+      </div>
       <Footer />
     </div>
     
@@ -102,7 +138,7 @@ export async function getServerSideProps(context) {
   
   let url = `https://hacker-news.firebaseio.com/v0/item/${pid}.json?print=pretty`;
   const post = await getPostsViaCache(url);
-  const {image, summary} = await getPageImg(post.url);
+  const {image, summary} = await getImageAndSummary(post.url);
 
   return {
     props: {
@@ -113,7 +149,13 @@ export async function getServerSideProps(context) {
   }
 }
 
-function getPageImg(url) {
+function getImageAndSummary(url) {
+    if (!url) {
+      return {
+        image: null,
+        summary: null
+      }
+    }
     return new Promise((resolve, reject) => {
         //get our html
         axios.get(url)
