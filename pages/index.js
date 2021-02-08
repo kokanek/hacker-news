@@ -21,7 +21,6 @@ function onPaginationChange(page, pageSize, router) {
 export default function Home(props) {
 
   const router = useRouter();
-  console.log('router: ', router);
   const { query, pathname } = router;
   const path = pathname.split('/')[1] || 'news';
   console.log('path: ', path);
