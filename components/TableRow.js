@@ -1,5 +1,5 @@
 import styles from '../styles/Home.module.css';
-import { Statistic, Row, Col, Button, Divider, Pagination, Layout, Menu } from 'antd';
+import { Row, Col, Button, Divider, Pagination, Layout, Menu } from 'antd';
 import { UserOutlined, ClockCircleOutlined, LinkOutlined } from '@ant-design/icons';
 import { getElapsedTime } from './utils';
 
