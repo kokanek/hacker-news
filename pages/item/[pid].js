@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import Head from 'next/head'
 import cheerio from 'cheerio';
 import axios from 'axios';
@@ -120,7 +120,7 @@ export default function Item(props) {
               actions={[<span key="comment-nested-reply-to">view replies</span>]}
               author={comment.author}
               avatar={ <Avatar>{comment.author[0]}</Avatar>}
-              content={<p className={styles.stats}>{ReactHtmlParser(comment.content)}</p>}
+              content={<p className={styles.stats}>{parse(comment.content || '')}</p>}
             >
             </Comment>
           )
